@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+
+}
+
+enum UserRole {
+  ANONYMOUS
+  VIEWER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+model User {
+  id          String           @id @default(uuid())
+  provider_id String           @unique
+  username    String           @unique
+  displayName String?
+  email       String?          
+  password    String?
+  role        UserRole         @default(VIEWER)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  updatedBy   String?
+
+  dashboards  UserDashboard[]
+}
+
+model Dashboard {
+  id           String           @id @default(uuid())
+  name         String
+  description  String?
+  color        String?
+  workspaceId  String
+  reportId     String
+  accessCtrl   Status           @default(ACTIVE)
+  status       Status           @default(ACTIVE)
+  createdAt    DateTime         @default(now())
+  createdBy    String?
+  updatedAt    DateTime         @default(now()) @updatedAt
+  updatedBy    String?
+
+  users        UserDashboard[]
+  mainRoles    MainRole[]
+
+}
+
+model MainRole {
+  id           String      @id @default(uuid())
+  name         String
+  dashboardId  String
+  status       Status      @default(ACTIVE)
+  createdAt    DateTime    @default(now())
+  createdBy    String?
+  updatedAt    DateTime    @default(now()) @updatedAt
+  updatedBy    String?
+
+  dashboard    Dashboard   @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
+  subRoles     SubRole[]
+
+  userDashboards UserDashboard[]
+  @@unique([name, dashboardId])
+}
+
+model SubRole {
+  id          String     @id @default(uuid())
+  name        String
+  mainRoleId  String
+  status      Status     @default(ACTIVE)
+  createdAt   DateTime   @default(now())
+  createdBy   String?
+  updatedAt   DateTime   @default(now()) @updatedAt
+  updatedBy   String?
+  mainRole    MainRole   @relation(fields: [mainRoleId], references: [id], onDelete: Cascade)
+
+  userDashboards UserDashboard[]
+
+  @@unique([name, mainRoleId])
+}
+
+model UserDashboard {
+  id                  String          @id @default(uuid())
+  userId              String
+  dashboardId         String
+  mainRoleId          String?         
+  subRoleId           String?
+  status              Status          @default(ACTIVE)
+  createdAt           DateTime        @default(now())
+  createdBy           String?
+  updatedAt           DateTime        @default(now()) @updatedAt
+  updatedBy           String?
+
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dashboard  Dashboard @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
+  mainRole   MainRole? @relation(fields: [mainRoleId], references: [id], onDelete: SetNull)
+  subRole    SubRole?  @relation(fields: [subRoleId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, dashboardId])
+}
