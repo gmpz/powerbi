@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     const healthParams = {
       grant_type: "authorization_code",
       code: code,
-      redirect_uri: "http://localhost:3000/providerid/",
+      redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/providerid/`,
       client_id: "01992c8d-2aef-7e03-988d-a70d06e8b7d8",
       client_secret: "26e7f1f8197eaff47e160be46cbd378ee797141f",
     };
@@ -133,7 +133,16 @@ export async function GET(req: NextRequest) {
       .setExpirationTime("7d")
       .sign(secret);
 
-    const response = NextResponse.redirect(new URL("/dashboard", req.url));
+    const host =
+      req.headers.get("x-forwarded-host") ?? req.headers.get("host");
+
+    const proto =
+      req.headers.get("x-forwarded-proto") ?? "http";
+
+    const origin = `${proto}://${host}`;
+    
+
+    const response = NextResponse.redirect(`${origin}/dashboard`);
 
     // set cookie
     response.cookies.set("access_token", token, {

@@ -6,7 +6,7 @@ const BtnProvider = () => {
   const handlePorviderLogin = () => {
     // redirect ไป API กลาง
     window.location.href =
-      "https://moph.id.th/oauth/redirect?client_id=01992c8d-2aef-7e03-988d-a70d06e8b7d8&redirect_uri=http://localhost:3000/providerid/&response_type=code&state=http://localhost:3000/providerid/";
+      `https://moph.id.th/oauth/redirect?client_id=01992c8d-2aef-7e03-988d-a70d06e8b7d8&redirect_uri=${process.env.NEXT_PUBLIC_APP_URL}/providerid/&response_type=code&state=${process.env.NEXT_PUBLIC_APP_URL}/providerid/`;
   };
   return (
     <Button
