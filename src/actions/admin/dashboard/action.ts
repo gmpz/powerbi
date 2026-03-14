@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
 import { notFound, redirect } from "next/navigation";
+import { UserRole } from "@prisma/client";
 
 // 🔥 helper delay
 function delay(ms: number) {
