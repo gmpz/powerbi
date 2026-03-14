@@ -2,21 +2,13 @@
 
 import * as React from "react"
 import {
-  BookOpen,
-  Bot,
   Command,
-  Frame,
-  LifeBuoy,
-  Map,
-  PieChart,
-  Send,
   Settings2,
   SquareTerminal,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavSecondary } from "@/components/nav-secondary"
+
 import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
@@ -77,13 +69,16 @@ const data = {
   ],
 }
 
-export function AppSidebar({ user, ...props }: React.ComponentProps<typeof Sidebar> & { user: User }) {
+export function AppSidebar({ user, ...props }: React.ComponentProps<typeof Sidebar> & { user: User | null
+ }) {
+  const role = user?.role
+
   const navMain = data.navMain.filter((item: any) => {
     if (!item.roles) return true
-    return item.roles.includes(user.role)
+    return role && item.roles.includes(role)
   })
   return (
-    <Sidebar variant="inset" {...props}>
+    <Sidebar variant="inset" {...props} >
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -93,8 +88,8 @@ export function AppSidebar({ user, ...props }: React.ComponentProps<typeof Sideb
                   <Command className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Acme Inc</span>
-                  <span className="truncate text-xs">Enterprise</span>
+                  <span className="truncate font-medium">Dashboard</span>
+                  <span className="truncate text-xs">สสจ.ปทุมธานี</span>
                 </div>
               </a>
             </SidebarMenuButton>
@@ -107,7 +102,7 @@ export function AppSidebar({ user, ...props }: React.ComponentProps<typeof Sideb
         <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser user={user!} />
       </SidebarFooter>
     </Sidebar>
   )

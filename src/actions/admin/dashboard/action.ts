@@ -49,6 +49,9 @@ export async function getDashboard() {
         },
       },
     },
+    orderBy: {
+      name: "asc",
+    },
   });
 
   return dashboards;
@@ -159,9 +162,18 @@ export async function getDashboardMainRole(dashboardId: string) {
     notFound();
   }
 
+  // const mainRoles = await prisma.mainRole.findMany({
+  //   where: { dashboardId },
+  // });
   const mainRoles = await prisma.mainRole.findMany({
-    where: { dashboardId },
-  });
+    where: {
+      OR: [
+        { type: "SYSTEM" },
+        { dashboardId: dashboardId }
+      ]
+    },
+    orderBy : {name: "asc"}
+  })
 
   return mainRoles;
 }
@@ -191,6 +203,7 @@ export async function insertDashboardMainRole(dashboardId: string, roleName: str
 
   const newMainRole = await prisma.mainRole.create({
     data: {
+      code: roleName,
       name: roleName,
       dashboardId,
       createdBy: payload.userId as string,
@@ -229,13 +242,18 @@ export async function getDashboardSubRole(dashboardId: string) {
   const subRoles = await prisma.subRole.findMany({
   where: {
     mainRole: {
-      dashboardId: dashboardId,
+      OR: [
+        { type: "SYSTEM" },
+        { dashboardId: dashboardId }
+      ]
     },
   },
   select: {
     id: true,
+    code: true,
     name: true,
     status: true,
+    type: true,
     createdAt: true,
     updatedAt: true,
     mainRole: {
@@ -245,15 +263,15 @@ export async function getDashboardSubRole(dashboardId: string) {
       },
     },
   },
+  orderBy : { code : "asc"}
 });
 
   return subRoles;
 }
 
-export async function insertDashboardSubRole(dashboardId: string, roleName: string, mainRoleId: string) {
+export async function insertDashboardSubRole(dashboardId: string,roleCode: string, roleName: string, mainRoleId: string) {
   const cookieStore = await cookies();
   const token = cookieStore.get("access_token")?.value;
-  
   
   if (!token) {
     redirect("/login");
@@ -275,6 +293,7 @@ export async function insertDashboardSubRole(dashboardId: string, roleName: stri
 
   const newMainRole = await prisma.subRole.create({
     data: {
+      code: Number(roleCode),
       name: roleName,
       mainRoleId,
       createdBy: payload.userId as string,

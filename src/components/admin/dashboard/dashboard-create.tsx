@@ -42,11 +42,7 @@ const dashboardSchema = z.object({
     .min(3, "Dashboard name must be at least 3 characters")
     .max(100),
 
-  description: z
-    .string()
-    .trim()
-    .max(500, "Description too long")
-    .optional(),
+  description: z.string().trim().max(500, "Description too long").optional(),
 
   workspaceId: z.string().min(1, "Workspace ID is required"),
 
@@ -97,25 +93,21 @@ export default function DashboardCreate() {
       color: "#2563EB",
     },
   });
-  const router = useRouter()
+  const router = useRouter();
 
   const selectedColor = watch("color");
   const statusValue = watch("status");
   const rbacValue = watch("rbac");
 
   const onSubmit = async (data: FormValues) => {
-
     try {
-    
-        const res = await insertDashboard(data);
-        toast.success(res.message || "Main role added successfully");
-        reset();
-        router.push(`/admin/dashboard/setting/${res.dashboard.id}`)
+      const res = await insertDashboard(data);
+      toast.success(res.message || "Main role added successfully");
+      reset();
+      router.push(`/admin/dashboard/setting/${res.dashboard.id}`);
     } catch (err: any) {
-        toast.error(err?.message || "Failed to add main role");
+      toast.error(err?.message || "Failed to add main role");
     }
-
-    
   };
 
   return (
@@ -131,17 +123,13 @@ export default function DashboardCreate() {
             <label className="text-sm font-medium">Dashboard Name</label>
             <Input {...register("name")} />
             {errors.name && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.name.message}
-              </p>
+              <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>
             )}
           </div>
 
           {/* Description */}
           <div>
-            <label className="text-sm font-medium">
-              Dashboard Description
-            </label>
+            <label className="text-sm font-medium">Dashboard Description</label>
             <Textarea {...register("description")} />
             {errors.description && (
               <p className="text-sm text-red-500 mt-1">
@@ -154,6 +142,7 @@ export default function DashboardCreate() {
           <div>
             <label className="text-sm font-medium">Theme Color</label>
 
+            {/* Preset */}
             <div className="flex flex-wrap gap-3 mt-2">
               {presetColors.map((color) => (
                 <button
@@ -163,13 +152,53 @@ export default function DashboardCreate() {
                     setValue("color", color, { shouldDirty: true })
                   }
                   className={`w-8 h-8 rounded-full border-2 transition-all ${
-                    selectedColor === color
+                    selectedColor?.toLowerCase() === color.toLowerCase()
                       ? "border-black scale-110"
                       : "border-transparent"
                   }`}
                   style={{ backgroundColor: color }}
                 />
               ))}
+            </div>
+
+            {/* Custom Input */}
+            <div className="mt-3 flex items-center gap-3">
+              {/* Native Color Picker */}
+              <input
+                type="color"
+                value={selectedColor}
+                onChange={(e) =>
+                  setValue("color", e.target.value, { shouldDirty: true })
+                }
+                className="w-8 h-8 cursor-pointer rounded-md border-0 p-0 overflow-hidden"
+                style={{
+                  appearance: "none",
+                  WebkitAppearance: "none",
+                }}
+              />
+
+              <style jsx>{`
+                input[type="color"]::-webkit-color-swatch-wrapper {
+                  padding: 0;
+                }
+
+                input[type="color"]::-webkit-color-swatch {
+                  border: none;
+                  border-radius: 6px;
+                }
+              `}</style>
+
+              {/* Hex Input */}
+              <Input
+                value={selectedColor}
+                placeholder="#2563EB"
+                onChange={(e) =>
+                  setValue("color", e.target.value, { shouldDirty: true })
+                }
+                className="w-40 font-mono"
+              />
+
+              
             </div>
 
             {errors.color && (
@@ -203,7 +232,9 @@ export default function DashboardCreate() {
 
           {/* Status */}
           <div>
-            <label className="text-sm font-medium">Role-Base Access Control</label>
+            <label className="text-sm font-medium">
+              Role-Base Access Control
+            </label>
             <Select
               value={rbacValue}
               onValueChange={(value) =>
@@ -243,8 +274,6 @@ export default function DashboardCreate() {
             </Select>
           </div>
 
-          
-
           {/* Actions */}
           <div className="flex justify-end gap-2 pt-4">
             <Button
@@ -256,10 +285,7 @@ export default function DashboardCreate() {
               Cancel
             </Button>
 
-            <Button
-              type="submit"
-              disabled={!isDirty || isSubmitting}
-            >
+            <Button type="submit" disabled={!isDirty || isSubmitting}>
               {isSubmitting ? "Creating..." : "Create Dashboard"}
             </Button>
           </div>

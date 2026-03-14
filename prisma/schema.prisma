@@ -11,6 +11,7 @@ datasource db {
 enum UserRole {
   ANONYMOUS
   VIEWER
+  EXECUTIVE
   ADMIN
   SUPER_ADMIN
 }
@@ -18,6 +19,11 @@ enum UserRole {
 enum Status {
   ACTIVE
   INACTIVE
+}
+
+enum RoleType {
+  SYSTEM   // default ที่มากับระบบ
+  DASHBOARD   // user สร้างเอง
 }
 
 model User {
@@ -56,25 +62,29 @@ model Dashboard {
 
 model MainRole {
   id           String      @id @default(uuid())
+  code         String
   name         String
-  dashboardId  String
+  dashboardId  String?
+  type         RoleType    @default(DASHBOARD)
   status       Status      @default(ACTIVE)
   createdAt    DateTime    @default(now())
   createdBy    String?
   updatedAt    DateTime    @default(now()) @updatedAt
   updatedBy    String?
 
-  dashboard    Dashboard   @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
+  dashboard    Dashboard?   @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
   subRoles     SubRole[]
 
   userDashboards UserDashboard[]
-  @@unique([name, dashboardId])
+  @@unique([dashboardId, code])
 }
 
 model SubRole {
   id          String     @id @default(uuid())
+  code        Int        @db.UnsignedInt
   name        String
   mainRoleId  String
+  type         RoleType   @default(DASHBOARD)
   status      Status     @default(ACTIVE)
   createdAt   DateTime   @default(now())
   createdBy   String?
@@ -84,7 +94,7 @@ model SubRole {
 
   userDashboards UserDashboard[]
 
-  @@unique([name, mainRoleId])
+  @@unique([mainRoleId, code])
 }
 
 model UserDashboard {

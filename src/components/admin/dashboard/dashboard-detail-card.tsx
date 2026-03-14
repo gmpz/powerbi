@@ -114,7 +114,6 @@ export default function DashboardDetailCard({
 
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-
           {/* Dashboard ID */}
           <div>
             <label className="text-sm">Dashboard ID</label>
@@ -142,10 +141,12 @@ export default function DashboardDetailCard({
           </div>
 
           {/* Color */}
-          <div>
-            <label className="text-sm">Theme Color</label>
 
-            <div className="flex gap-3 mt-2">
+          <div>
+            <label className="text-sm font-medium">Theme Color</label>
+
+            {/* Preset */}
+            <div className="flex flex-wrap gap-3 mt-2">
               {presetColors.map((color) => (
                 <button
                   key={color}
@@ -154,7 +155,7 @@ export default function DashboardDetailCard({
                     setValue("color", color, { shouldDirty: true })
                   }
                   className={`w-8 h-8 rounded-full border-2 transition-all ${
-                    selectedColor === color
+                    selectedColor?.toLowerCase() === color.toLowerCase()
                       ? "border-black scale-110"
                       : "border-transparent"
                   }`}
@@ -163,19 +164,49 @@ export default function DashboardDetailCard({
               ))}
             </div>
 
-            {errors.color && (
-              <p className="text-sm text-red-500">{errors.color.message}</p>
-            )}
-
-            <div className="mt-3 flex items-center gap-2">
-              <div
-                className="w-6 h-6 rounded"
-                style={{ backgroundColor: selectedColor }}
+            {/* Custom Input */}
+            <div className="mt-3 flex items-center gap-3">
+              {/* Native Color Picker */}
+              <input
+                type="color"
+                value={selectedColor}
+                onChange={(e) =>
+                  setValue("color", e.target.value, { shouldDirty: true })
+                }
+                className="w-8 h-8 cursor-pointer rounded-md border-0 p-0 overflow-hidden"
+                style={{
+                  appearance: "none",
+                  WebkitAppearance: "none",
+                }}
               />
-              <span className="text-sm text-muted-foreground">
-                {selectedColor}
-              </span>
+
+              <style jsx>{`
+                input[type="color"]::-webkit-color-swatch-wrapper {
+                  padding: 0;
+                }
+
+                input[type="color"]::-webkit-color-swatch {
+                  border: none;
+                  border-radius: 6px;
+                }
+              `}</style>
+
+              {/* Hex Input */}
+              <Input
+                value={selectedColor}
+                placeholder="#2563EB"
+                onChange={(e) =>
+                  setValue("color", e.target.value, { shouldDirty: true })
+                }
+                className="w-40 font-mono"
+              />
             </div>
+
+            {errors.color && (
+              <p className="text-sm text-red-500 mt-2">
+                {errors.color.message}
+              </p>
+            )}
           </div>
 
           {/* Workspace */}
@@ -194,9 +225,7 @@ export default function DashboardDetailCard({
             <label className="text-sm">Report ID</label>
             <Input {...register("reportId")} />
             {errors.reportId && (
-              <p className="text-sm text-red-500">
-                {errors.reportId.message}
-              </p>
+              <p className="text-sm text-red-500">{errors.reportId.message}</p>
             )}
           </div>
 
@@ -265,7 +294,6 @@ export default function DashboardDetailCard({
               {isSubmitting ? "Saving..." : "Save Changes"}
             </Button>
           </div>
-
         </form>
       </CardContent>
     </Card>

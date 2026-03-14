@@ -65,7 +65,7 @@ export default function DashboardPermissionTable({
       headerName: "Sub Role",
       flex: 1,
       renderCell: (params) => (
-        <span>{params.value?.name == null ? "-" : params.value.name}</span>
+        <span>{params.value?.code != null ? "[" + params.value?.code.toString().padStart(5, "0") + "]" : "-"}</span>
       ),
     },
     {

@@ -40,7 +40,7 @@ const formSchema = z.object({
     .min(1, "Display name is required")
     .max(50, "Display name must be less than 50 characters"),
 
-  role: z.enum(["ANONYMOUS", "VIEWER", "ADMIN", "SUPER_ADMIN"]),
+  role: z.enum(["ANONYMOUS", "VIEWER", "EXECUTIVE", "ADMIN", "SUPER_ADMIN"]),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -159,6 +159,13 @@ export default function UserProfileCard({
     disabled={isSelf && (isAdmin || isSuperAdmin)}
   >
     Viewer
+  </SelectItem>
+
+   <SelectItem
+    value="EXECUTIVE"
+    disabled={isSelf && (isAdmin || isSuperAdmin)}
+  >
+    Executive
   </SelectItem>
 
   <SelectItem

@@ -13,10 +13,12 @@ import { EditIcon, Trash2Icon } from "lucide-react";
 
 type SubRoleType = {
   id: string;
+  code: number;
   name: string;
   status: "ACTIVE" | "INACTIVE";
   createdAt: Date;
   updatedAt: Date;
+  type: "DASHBOARD" | "SYSTEM";
   mainRole: {
     id: string;
     name: string;
@@ -26,7 +28,7 @@ type SubRoleType = {
 type MainRoleType = {
   id: string;
   name: string;
-  dashboardId: string;
+  dashboardId: string | null;
   status: "ACTIVE" | "INACTIVE";
   createdAt: Date;
   updatedAt: Date;
@@ -36,16 +38,22 @@ export default function DashboardSubRoleTable({
   dashboardId,
   subRoles,
   mainRole,
+  userRole
 }: {
   dashboardId: string;
   subRoles: SubRoleType[];
   mainRole: MainRoleType[];
+  userRole: string;
 }) {
   const [openAdd, setOpenAdd] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDel, setOpenDel] = useState(false);
-  const [selectedSubRole, setSelectedSubRole] = useState<SubRoleType | null>(null);
-  const [selectedDelRole, setSelectedDelRole] = useState<SubRoleType | null>(null);
+  const [selectedSubRole, setSelectedSubRole] = useState<SubRoleType | null>(
+    null,
+  );
+  const [selectedDelRole, setSelectedDelRole] = useState<SubRoleType | null>(
+    null,
+  );
 
   const columns: GridColDef[] = [
     {
@@ -70,7 +78,18 @@ export default function DashboardSubRoleTable({
       ),
     },
 
-    { field: "name", headerName: "Sub Role", flex: 1 },
+    {
+      field: "code",
+      headerName: "Sub Code",
+      flex: 1,
+      renderCell: (params) => (
+        <span>
+          [
+          {params.value != null ? params.value.toString().padStart(5, "0") : ""}
+          ]
+        </span>
+      ),
+    },
     {
       field: "status",
       headerName: "Status",
@@ -94,27 +113,27 @@ export default function DashboardSubRoleTable({
       filterable: false,
       renderCell: (params) => (
         <div className="flex items-center justify-center space-x-1 w-full h-full">
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => {
-            setSelectedSubRole(params.row);
-            setOpenEdit(true);
-          }}
-        >
-          <EditIcon />
-        </Button>
-        <Button
-          size="sm"
-          variant="destructive"
-          onClick={() => {
-            setSelectedDelRole(params.row);
-            setOpenDel(true);
-          }}
-        >
-          <Trash2Icon className="text-sm" />
-        </Button>
-
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => {
+              setSelectedSubRole(params.row);
+              setOpenEdit(true);
+            }}
+          >
+            <EditIcon />
+          </Button>
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={() => {
+              setSelectedDelRole(params.row);
+              setOpenDel(true);
+            }}
+            disabled={params.row.type === "SYSTEM" && userRole !== "SUPER_ADMIN"}
+          >
+            <Trash2Icon className="text-sm" />
+          </Button>
         </div>
       ),
     },
@@ -153,7 +172,11 @@ export default function DashboardSubRoleTable({
         setOpen={setOpenEdit}
       />
 
-      <DelSubRoleDialog open={openDel} setOpen={setOpenDel} subRole={selectedDelRole} />
+      <DelSubRoleDialog
+        open={openDel}
+        setOpen={setOpenDel}
+        subRole={selectedDelRole}
+      />
     </Card>
   );
 }

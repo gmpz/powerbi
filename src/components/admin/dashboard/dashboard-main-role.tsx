@@ -3,10 +3,10 @@ import DashboardMainRoleTable from './dashboard-main-role-table copy'
 import { get } from 'http'
 import { getDashboardMainRole } from '@/actions/admin/dashboard/action';
 
-const DashboardMainRole = async({ dashboardId }: { dashboardId: string }) => {
+const DashboardMainRole = async({ dashboardId,userRole }: { dashboardId: string,userRole : string }) => {
 const mainRole = await getDashboardMainRole(dashboardId);
   return (
-    <DashboardMainRoleTable dashboardId={dashboardId} mainRoles={mainRole} />
+    <DashboardMainRoleTable dashboardId={dashboardId} mainRoles={mainRole} userRole={userRole} />
   )
 }
 

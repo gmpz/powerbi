@@ -3,6 +3,7 @@
 
 
 import { getDashboardById } from "@/actions/admin/dashboard/action";
+import { getCurrentUser, getUserById } from "@/actions/admin/user/action";
 import DashboardDetailCard from "@/components/admin/dashboard/dashboard-detail-card";
 import DashboardMainRole from "@/components/admin/dashboard/dashboard-main-role";
 import DashboardSubRole from "@/components/admin/dashboard/dashboard-sub-role";
@@ -13,6 +14,8 @@ import DashboardSubRole from "@/components/admin/dashboard/dashboard-sub-role";
 export default async function DasboardDetailPage({ params }: { params: { slug: string } }) {
   const { slug } = await params;
   const dashboard = await getDashboardById(slug);
+  const userId = await getCurrentUser();
+  const user = await getUserById(userId);
 
   
   if (!dashboard) {
@@ -38,8 +41,8 @@ export default async function DasboardDetailPage({ params }: { params: { slug: s
 
   {/* Right */}
   <div className="flex flex-col gap-6">
-    <DashboardMainRole dashboardId={dashboard.id} />
-    <DashboardSubRole dashboardId={dashboard.id} />
+    <DashboardMainRole dashboardId={dashboard.id} userRole={user!.role} />
+    <DashboardSubRole dashboardId={dashboard.id} userRole={user!.role}/>
   </div>
 
 </div>

@@ -1,5 +1,7 @@
+export const dynamic = "force-dynamic";
+
+import { redirect } from "next/navigation";
 import { AppSidebar } from "@/components/app-sidebar";
-import DashboardList from "@/components/dashboard/dashboard-list";
 import { DynamicBreadcrumb } from "@/components/nav/dynamic-breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -9,17 +11,21 @@ import {
 } from "@/components/ui/sidebar";
 import { getCurrentUser } from "@/lib/auth";
 
-
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+
   const user = await getCurrentUser();
-  
+
+  if (!user) {
+    redirect("/login");
+  }
+
   return (
     <SidebarProvider>
-      <AppSidebar user={user!} />
+      <AppSidebar user={user} />
       <SidebarInset>
         <header className="flex h-12 shrink-0 items-center gap-2">
           <div className="flex items-center gap-2 px-4">
@@ -31,10 +37,10 @@ export default async function DashboardLayout({
             <DynamicBreadcrumb />
           </div>
         </header>
-        <div className="p-4">
-          {children}
-        </div>
+
+        <div className="p-4">{children}</div>
+
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }

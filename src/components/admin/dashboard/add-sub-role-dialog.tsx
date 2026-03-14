@@ -23,11 +23,12 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { insertDashboardSubRole } from "@/actions/admin/dashboard/action";
+import { Loader2 } from "lucide-react";
 
 type MainRoleType = {
   id: string;
   name: string;
-  dashboardId: string;
+  dashboardId: string | null;
   status: "ACTIVE" | "INACTIVE";
   createdAt: Date;
   updatedAt: Date;
@@ -37,10 +38,19 @@ type MainRoleType = {
 
 const formSchema = z.object({
   mainRoleId: z.string().min(1, "Please select main role"),
+
+  subRoleCode: z
+  .string()
+  .length(5, "HosCode must be exactly 5 digits")
+  .regex(/^\d+$/, "HosCode must be numbers only")
+  .refine((val) => Number(val) > 0, {
+  message: "HosCode must be greater than 00000",
+}),
+
   subRoleName: z
     .string()
     .min(1, "Sub-role must be at least 1 characters")
-    .max(50),
+    .max(190),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -58,32 +68,40 @@ export default function AddSubRoleDialog({
   mainRole: MainRoleType[]; // ✅ FIX: ต้องเป็น array
   dashboardId: string;
 }) {
-  const router = useRouter()
+  const router = useRouter();
   const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-    reset,
-  } = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-  });
+  register,
+  handleSubmit,
+  setValue,
+  formState: { errors, isSubmitting },
+  reset,
+} = useForm<FormValues>({
+  resolver: zodResolver(formSchema),
+  mode: "onChange",
+});
+
+  const subRoleCodeField = register("subRoleCode");
 
   const onSubmit = async (data: FormValues) => {
     try {
-      const res = await insertDashboardSubRole(dashboardId, data.subRoleName, data.mainRoleId);
+      const res = await insertDashboardSubRole(
+        dashboardId,
+        data.subRoleCode,
+        data.subRoleName,
+        data.mainRoleId,
+      );
       toast.success(res.message || "Sub role added successfully");
       setOpen(false);
       reset();
-      router.refresh()
+      router.refresh();
     } catch (err: any) {
       toast.error(err?.message || "Failed to add sub role");
     }
   };
   const onCancel = () => {
-    setOpen(false)
+    setOpen(false);
     reset();
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen} modal={false}>
@@ -99,9 +117,7 @@ export default function AddSubRoleDialog({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* 🔹 Main Role */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">
-              Main-Role Select
-            </label>
+            <label className="text-sm font-medium">Main-Role Select</label>
 
             <Select
               onValueChange={(value) =>
@@ -130,9 +146,32 @@ export default function AddSubRoleDialog({
 
           {/* 🔹 Sub Role Name */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">
-              Sub-Role Name
-            </label>
+            <label className="text-sm font-medium">Sub-Role Code</label>
+
+            <Input
+              type="text"
+              placeholder="Enter sub role code"
+              maxLength={5}
+              pattern="\d{5}"
+              inputMode="numeric"
+              {...subRoleCodeField}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, "").slice(0, 5);
+                e.target.value = value;
+                subRoleCodeField.onChange(e);
+              }}
+            />
+
+            {errors.subRoleCode && (
+              <p className="text-sm text-red-500">
+                {errors.subRoleCode.message}
+              </p>
+            )}
+          </div>
+
+          {/* 🔹 Sub Role Name */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Sub-Role Name</label>
 
             <Input
               type="text"
@@ -149,16 +188,12 @@ export default function AddSubRoleDialog({
 
           {/* Footer */}
           <div className="flex justify-end gap-3 pt-2">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={onCancel}
-            >
+            <Button type="button" variant="ghost" onClick={onCancel}>
               Cancel
             </Button>
 
-            <Button type="submit">
-              Add Access
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Adding...</> : "Add Access"}
             </Button>
           </div>
         </form>

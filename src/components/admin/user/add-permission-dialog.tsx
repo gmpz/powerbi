@@ -17,7 +17,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-
 import { Separator } from "@/components/ui/separator";
 
 import { useEffect, useState } from "react";
@@ -57,11 +56,13 @@ type Dashboard = {
 
 type MainRole = {
   id: string;
+  code: string;
   name: string;
 };
 
 type SubRole = {
   id: string;
+  code: number;
   name: string;
 };
 
@@ -100,7 +101,7 @@ export default function AddPermissionDialog({
   const dashboardId = watch("dashboardId");
   const mainRoleId = watch("mainRoleId");
   const subRoleId = watch("subRoleId");
-  
+
   /* ⭐ ใช้เช็คว่าเลือกอะไรแล้วหรือยัง */
 
   const canSubmit = dashboardId && mainRoleId;
@@ -143,9 +144,7 @@ export default function AddPermissionDialog({
   };
 
   const handleSubRoleChange = async (id: string) => {
-
     setValue("subRoleId", id);
-
   };
 
   /* ---------------- Submit ---------------- */
@@ -156,7 +155,7 @@ export default function AddPermissionDialog({
       toast.success(res.message || "Main role added successfully");
       setOpen(false);
       reset();
-      router.refresh()
+      router.refresh();
     } catch (err: any) {
       toast.error(err?.message || "Failed to add main role");
     }
@@ -216,7 +215,6 @@ export default function AddPermissionDialog({
               <label className="text-sm font-medium">Main Role</label>
 
               <Select
-
                 value={mainRoleId}
                 onValueChange={handleMainRoleChange}
                 disabled={!dashboardId}
@@ -245,7 +243,6 @@ export default function AddPermissionDialog({
               <label className="text-sm font-medium">Sub Role</label>
 
               <Select
-
                 value={subRoleId}
                 onValueChange={handleSubRoleChange}
                 disabled={!mainRoleId}
@@ -257,7 +254,11 @@ export default function AddPermissionDialog({
                 <SelectContent className="">
                   {subRoles.map((r) => (
                     <SelectItem key={r.id} value={r.id}>
-                      {r.name}
+                      [
+                      {r?.code != null
+                        ? r.code.toString().padStart(5, "0")
+                        : ""}
+                      ] {r.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -275,7 +276,14 @@ export default function AddPermissionDialog({
             </Button>
 
             <Button type="submit" disabled={!canSubmit || isSubmitting}>
-              {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Adding...</> : "Add Access"}
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Adding...
+                </>
+              ) : (
+                "Add Access"
+              )}
             </Button>
           </div>
         </form>

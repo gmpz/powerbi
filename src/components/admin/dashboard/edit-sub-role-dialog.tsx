@@ -26,7 +26,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { updateDashboardMainRole, updateDashboardSubRole } from "@/actions/admin/user_dashboard/action";
+import {
+  updateDashboardMainRole,
+  updateDashboardSubRole,
+} from "@/actions/admin/user_dashboard/action";
 
 /* ---------------- Schema ---------------- */
 
@@ -75,7 +78,7 @@ export default function EditSubRoleDialog({ subRole, open, setOpen }: any) {
       toast.success(res.message || "Main role added successfully");
       setOpen(false);
       reset();
-      router.refresh()
+      router.refresh();
     } catch (err: any) {
       toast.error(err?.message || "Failed to add main role");
     }
@@ -94,9 +97,7 @@ export default function EditSubRoleDialog({ subRole, open, setOpen }: any) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        
-      </DialogTrigger>
+      <DialogTrigger asChild></DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
@@ -110,8 +111,24 @@ export default function EditSubRoleDialog({ subRole, open, setOpen }: any) {
           <div className="">
             <label className="text-sm font-medium">Main Role</label>
 
-            <Input placeholder="Enter role name" defaultValue={subRole?.mainRole?.name} disabled />
+            <Input
+              placeholder="Enter role name"
+              defaultValue={subRole?.mainRole?.name}
+              disabled
+            />
+          </div>
+          <div className="">
+            <label className="text-sm font-medium">Sub Role Code</label>
 
+            <Input
+              placeholder="Enter role name"
+              defaultValue={
+                subRole?.code != null
+                  ? subRole.code.toString().padStart(5, "0")
+                  : ""
+              }
+              disabled
+            />
           </div>
           <div className="">
             <label className="text-sm font-medium">Sub Role Name</label>

@@ -74,15 +74,19 @@ export async function getAvailableDashboards(userId: string) {
 export async function getMainRoles(dashboardId: string) {
   const roles = await prisma.mainRole.findMany({
     where: {
-      dashboardId,
+      OR: [
+        { type: "SYSTEM" },
+        { dashboardId: dashboardId }
+      ],
       status: "ACTIVE",
     },
     select: {
       id: true,
+      code: true,
       name: true,
     },
     orderBy: {
-      name: "asc",
+      code: "asc",
     },
   });
 
@@ -101,10 +105,11 @@ export async function getSubRoles(mainRoleId: string) {
     },
     select: {
       id: true,
+      code: true,
       name: true,
     },
     orderBy: {
-      name: "asc",
+      code: "asc",
     },
   });
 

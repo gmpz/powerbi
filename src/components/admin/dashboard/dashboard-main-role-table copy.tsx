@@ -14,7 +14,7 @@ import { EditIcon, Trash2Icon } from "lucide-react";
 type MainRoleType = {
   id: string;
   name: string;
-  dashboardId: string;
+  dashboardId: string | null;
   status: "ACTIVE" | "INACTIVE";
   createdAt: Date;
   updatedAt: Date;
@@ -23,9 +23,11 @@ type MainRoleType = {
 export default function DashboardMainRoleTable({
   dashboardId,
   mainRoles,
+  userRole
 }: {
   dashboardId: string;
   mainRoles: MainRoleType[];
+  userRole:string;
 }) {
   const [openAdd, setOpenAdd] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -90,6 +92,7 @@ export default function DashboardMainRoleTable({
             setSelectedDelRole(params.row);
             setOpenDels(true);
           }}
+          disabled={params.row.type === "SYSTEM" && userRole !== "SUPER_ADMIN"}
         >
           <Trash2Icon className="text-sm" />
         </Button>

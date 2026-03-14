@@ -54,11 +54,13 @@ type Dashboard = {
 
 type MainRole = {
   id: string;
+  code: string;
   name: string;
 };
 
 type SubRole = {
   id: string;
+  code: number;
   name: string;
 };
 
@@ -136,6 +138,7 @@ export default function EditPermissionDialog({
           ? [
               {
                 id: dash.mainRole.id,
+                code: dash.mainRole.code,
                 name: dash.mainRole.name,
               },
             ]
@@ -154,6 +157,7 @@ export default function EditPermissionDialog({
             ? [
                 {
                   id: dash.subRole.id,
+                  code: dash.subRole.code,
                   name: dash.subRole.name,
                 },
               ]
@@ -327,7 +331,11 @@ export default function EditPermissionDialog({
                 <SelectContent>
                   {subRoles.map((r) => (
                     <SelectItem key={r.id} value={r.id}>
-                      {r.name}
+                      [
+                      {r?.code != null
+                        ? r.code.toString().padStart(5, "0")
+                        : ""}
+                      ] {r.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
