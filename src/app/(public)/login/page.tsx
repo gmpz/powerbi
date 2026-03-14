@@ -13,7 +13,7 @@ export default function LoginPage() {
             <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
               <GalleryVerticalEnd className="size-4" />
             </div>
-            สาธารณสุขจังหวัดปทุมธานี
+            Dashboard สำนักงานสาธารณสุขจังหวัดปทุมธานี
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
