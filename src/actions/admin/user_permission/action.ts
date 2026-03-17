@@ -213,8 +213,7 @@ export async function updateDefualtRole(dashId : string, data : {
   if (!token) {
     redirect("/login");
   }
-  console.log("dashId -> ", dashId);
-  console.log("data -> ", data);
+
   const secret = new TextEncoder().encode(process.env.JWT_SECRET);
   const { payload } = await jwtVerify(token, secret);
 
@@ -231,9 +230,7 @@ export async function updateDefualtRole(dashId : string, data : {
     notFound();
   }
 
-  
-  
-  
+
   await prisma.defaultRole.update({
     where : { id : dashId},
     data : {
@@ -251,6 +248,97 @@ export async function updateDefualtRole(dashId : string, data : {
   };
 }
 
+
+export async function syncUserDashboard() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
+  
+  if (!token) {
+    redirect("/login");
+  }
+
+  const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+  const { payload } = await jwtVerify(token, secret);
+
+  const user = await prisma.user.findUnique({
+    where: { id: payload.userId as string },
+  });
+
+  
+  if (!user) {
+    notFound();
+  }
+  if (user.role !== "ADMIN" && user.role !== "SUPER_ADMIN") {
+    notFound();
+  }
+
+
+  // 1. ดึง dashboard ทั้งหมดในระบบ
+  const dashboards = await prisma.dashboard.findMany({
+    where: { status: "ACTIVE" },
+    select: { id: true },
+  });
+
+  // 2. ดึง user ที่มี defaultRole
+  const users = await prisma.user.findMany({
+  where: {
+    defaultRoles: {
+      some: {
+        status: "ACTIVE", // ✅ filter เฉพาะ active
+      },
+    },
+  },
+  include: {
+    defaultRoles: {
+      where: {
+        status: "ACTIVE", // ✅ เอาเฉพาะ active จริงๆ ตอน include
+      },
+    },
+  },
+});
+
+  for (const user of users) {
+    // 3. dashboard ที่ user มีอยู่แล้ว
+    const existing = await prisma.userDashboard.findMany({
+      where: { userId: user.id },
+      select: { dashboardId: true },
+    });
+
+    const existingSet = new Set(existing.map(e => e.dashboardId));
+
+    const toCreate: any[] = [];
+
+    for (const dashboard of dashboards) {
+      // ❌ มีแล้ว → ข้าม
+      if (existingSet.has(dashboard.id)) continue;
+
+      // 👉 เอา defaultRole ตัวแรก (หรือจะ custom logic ก็ได้)
+      const defaultRole = user.defaultRoles[0];
+
+      toCreate.push({
+        userId: user.id,
+        dashboardId: dashboard.id,
+        mainRoleId: defaultRole?.mainRoleId ?? null,
+        subRoleId: defaultRole?.subRoleId ?? null,
+        status: "ACTIVE",
+      });
+    }
+
+    // 4. bulk insert
+    if (toCreate.length > 0) {
+      await prisma.userDashboard.createMany({
+        data: toCreate,
+        skipDuplicates: true,
+      });
+    }
+  }
+
+
+  return {
+    success: true,
+    message: "updated successfully",
+  };
+}
 
 
 

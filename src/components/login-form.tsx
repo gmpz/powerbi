@@ -42,7 +42,7 @@ export function LoginForm({
           <Input id="password" type="password" required />
         </Field>
         <Field>
-          <Button type="submit">Login</Button>
+          <Button className="bg-primary" type="submit">Login</Button>
         </Field>
         <FieldSeparator>Or continue with</FieldSeparator>
         <Field >
