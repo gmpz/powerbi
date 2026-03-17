@@ -5,13 +5,19 @@ import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+
 export async function getPowerbi(dashboardId: string) {
+  // await delay(3000);
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("access_token")?.value;
 
     if (!token) {
-      redirect("/login");
+      redirect("/login"); 
     }
 
 

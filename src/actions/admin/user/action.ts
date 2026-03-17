@@ -188,3 +188,22 @@ export async function updateUser(
     message: "User updated successfully",
   };
 }
+
+export async function CreateUser(data: any) {
+  
+  const user = await prisma.user.create({
+    data: {
+      provider_id: data.provider_id,
+      username: data.username.toLowerCase(),
+      displayName: data.displayName,
+      email: data.email || null,
+      password: data.password || null,
+      role: data.role,
+    },
+  });
+
+  return {
+    message: "User created successfully",
+    user,
+  };
+}

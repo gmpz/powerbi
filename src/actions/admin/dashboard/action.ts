@@ -353,6 +353,39 @@ export async function insertDashboard(data: {
     }
   });
 
+  const isSyncDefaultDashboard = await prisma.systemSetting.findFirst({
+    where: {
+      code: "SYNC_DEFAULT_DASHBOARD"
+    },
+    select : {
+      status: true
+    }
+  });
+
+  if (isSyncDefaultDashboard) {
+    const defaultRole = await prisma.defaultRole.findMany({
+      where : {
+        status : "ACTIVE"
+      }
+    });
+
+    await Promise.all(
+      defaultRole.map((item) =>
+        prisma.userDashboard.create({
+          data: {
+            userId: item.userId,
+            dashboardId: newDashboard.id,
+            mainRoleId: item.mainRoleId,
+            subRoleId: item.subRoleId || null,
+            status: "ACTIVE",
+            createdBy: user.id
+          }
+        })
+      )
+    )
+
+  }
+
   return {
     success: true,
     message: "Dashboard created successfully",

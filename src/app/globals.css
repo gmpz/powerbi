@@ -81,16 +81,16 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0); */
   --sidebar: oklch(0.96 0.02 240);
---sidebar-foreground: oklch(0.30 0.03 240);
+  --sidebar-foreground: oklch(0.30 0.03 240);
 
---sidebar-primary: oklch(0.70 0.10 240);
---sidebar-primary-foreground: oklch(0.98 0.01 240);
+  --sidebar-primary: oklch(0.70 0.10 240);
+  --sidebar-primary-foreground: oklch(0.98 0.01 240);
 
---sidebar-accent: oklch(0.93 0.03 240);
---sidebar-accent-foreground: oklch(0.30 0.03 240);
+  --sidebar-accent: oklch(0.93 0.03 240);
+  --sidebar-accent-foreground: oklch(0.30 0.03 240);
 
---sidebar-border: oklch(0.88 0.02 240);
---sidebar-ring: oklch(0.72 0.08 240);
+  --sidebar-border: oklch(0.88 0.02 240);
+  --sidebar-ring: oklch(0.72 0.08 240);
 
   
 }

@@ -64,6 +64,10 @@ const data = {
           title: "Dashboard Settings",
           url: "/admin/dashboard/setting",
         },
+        {
+          title: "Default Permission",
+          url: "/admin/default/role",
+        },
       ],
     },
   ],

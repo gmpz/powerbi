@@ -5,7 +5,6 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
-
 }
 
 enum UserRole {
@@ -22,97 +21,131 @@ enum Status {
 }
 
 enum RoleType {
-  SYSTEM   // default ที่มากับระบบ
-  DASHBOARD   // user สร้างเอง
+  SYSTEM // default ที่มากับระบบ
+  DASHBOARD // user สร้างเอง
 }
 
 model User {
-  id          String           @id @default(uuid())
-  provider_id String           @unique
-  username    String           @unique
+  id          String   @id @default(uuid())
+  provider_id String   @unique
+  username    String   @unique
   displayName String?
-  email       String?          
+  email       String?
   password    String?
-  role        UserRole         @default(VIEWER)
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  role        UserRole @default(VIEWER)
+  status      Status   @default(ACTIVE)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   updatedBy   String?
 
-  dashboards  UserDashboard[]
+  dashboards   UserDashboard[]
+  defaultRoles DefaultRole[]
 }
 
 model Dashboard {
-  id           String           @id @default(uuid())
-  name         String
-  description  String?
-  color        String?
-  workspaceId  String
-  reportId     String
-  accessCtrl   Status           @default(ACTIVE)
-  status       Status           @default(ACTIVE)
-  createdAt    DateTime         @default(now())
-  createdBy    String?
-  updatedAt    DateTime         @default(now()) @updatedAt
-  updatedBy    String?
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  color       String?
+  workspaceId String
+  reportId    String
+  accessCtrl  Status   @default(ACTIVE)
+  status      Status   @default(ACTIVE)
+  createdAt   DateTime @default(now())
+  createdBy   String?
+  updatedAt   DateTime @default(now()) @updatedAt
+  updatedBy   String?
 
-  users        UserDashboard[]
-  mainRoles    MainRole[]
-
+  users     UserDashboard[]
+  mainRoles MainRole[]
 }
 
 model MainRole {
-  id           String      @id @default(uuid())
-  code         String
-  name         String
-  dashboardId  String?
-  type         RoleType    @default(DASHBOARD)
-  status       Status      @default(ACTIVE)
-  createdAt    DateTime    @default(now())
-  createdBy    String?
-  updatedAt    DateTime    @default(now()) @updatedAt
-  updatedBy    String?
+  id          String   @id @default(uuid())
+  code        String
+  name        String
+  dashboardId String?
+  type        RoleType @default(DASHBOARD)
+  status      Status   @default(ACTIVE)
+  createdAt   DateTime @default(now())
+  createdBy   String?
+  updatedAt   DateTime @default(now()) @updatedAt
+  updatedBy   String?
 
-  dashboard    Dashboard?   @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
+  dashboard    Dashboard?    @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
   subRoles     SubRole[]
+  defaultRoles DefaultRole[]
 
   userDashboards UserDashboard[]
+
   @@unique([dashboardId, code])
 }
 
 model SubRole {
-  id          String     @id @default(uuid())
-  code        Int        @db.UnsignedInt
-  name        String
-  mainRoleId  String
-  type         RoleType   @default(DASHBOARD)
-  status      Status     @default(ACTIVE)
-  createdAt   DateTime   @default(now())
-  createdBy   String?
-  updatedAt   DateTime   @default(now()) @updatedAt
-  updatedBy   String?
-  mainRole    MainRole   @relation(fields: [mainRoleId], references: [id], onDelete: Cascade)
+  id         String   @id @default(uuid())
+  code       Int      @db.UnsignedInt
+  name       String
+  mainRoleId String
+  type       RoleType @default(DASHBOARD)
+  status     Status   @default(ACTIVE)
+  createdAt  DateTime @default(now())
+  createdBy  String?
+  updatedAt  DateTime @default(now()) @updatedAt
+  updatedBy  String?
+  mainRole   MainRole @relation(fields: [mainRoleId], references: [id], onDelete: Cascade)
 
   userDashboards UserDashboard[]
+  defaultRoles   DefaultRole[]
 
   @@unique([mainRoleId, code])
 }
 
 model UserDashboard {
-  id                  String          @id @default(uuid())
-  userId              String
-  dashboardId         String
-  mainRoleId          String?         
-  subRoleId           String?
-  status              Status          @default(ACTIVE)
-  createdAt           DateTime        @default(now())
-  createdBy           String?
-  updatedAt           DateTime        @default(now()) @updatedAt
-  updatedBy           String?
+  id          String   @id @default(uuid())
+  userId      String
+  dashboardId String
+  mainRoleId  String?
+  subRoleId   String?
+  status      Status   @default(ACTIVE)
+  createdAt   DateTime @default(now())
+  createdBy   String?
+  updatedAt   DateTime @default(now()) @updatedAt
+  updatedBy   String?
 
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  dashboard  Dashboard @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
-  mainRole   MainRole? @relation(fields: [mainRoleId], references: [id], onDelete: SetNull)
-  subRole    SubRole?  @relation(fields: [subRoleId], references: [id], onDelete: SetNull)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dashboard Dashboard @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
+  mainRole  MainRole? @relation(fields: [mainRoleId], references: [id], onDelete: SetNull)
+  subRole   SubRole?  @relation(fields: [subRoleId], references: [id], onDelete: SetNull)
 
   @@unique([userId, dashboardId])
+}
+
+model DefaultRole {
+  id         String  @id @default(uuid())
+  userId     String
+  mainRoleId String?
+  subRoleId  String?
+  status     Status  @default(ACTIVE)
+
+  createdAt   DateTime @default(now())
+  createdBy   String?
+  updatedAt   DateTime @default(now()) @updatedAt
+  updatedBy   String?
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mainRole MainRole? @relation(fields: [mainRoleId], references: [id], onDelete: SetNull)
+  subRole  SubRole?  @relation(fields: [subRoleId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, mainRoleId, subRoleId])
+  
+}
+
+
+model SystemSetting {
+  id String @id @default(uuid())
+  code String @unique
+  nmae String
+  status Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
