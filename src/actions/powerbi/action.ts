@@ -120,10 +120,11 @@ export async function getPowerbi(dashboardId: string) {
     }
 
     const embedTokenData = await embedTokenRes.json();
-
+    console.log("url : ", reportData.embedUrl);
+    
     return {
       reportId,
-      embedUrl: reportData.embedUrl,
+      embedUrl: reportData.embedUrl + '&navContentPaneEnabled=false',
       embedToken: embedTokenData.token,
     };
   } catch (error) {

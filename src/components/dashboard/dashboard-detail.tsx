@@ -1,7 +1,7 @@
 "use client";
 
 import { getPowerbi } from "@/actions/powerbi/action";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Maximize, Minimize } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 
 interface DashboardProps {
@@ -14,17 +14,12 @@ interface DashboardProps {
   subRole?: string | null;
 }
 
-const DashboardDetail = ({
-  id,
-  name,
-  description,
-  workspaceId,
-  reportId,
-  mainRole,
-  subRole,
-}: DashboardProps) => {
+const DashboardDetail = ({ id }: DashboardProps) => {
   const reportRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const reportInstance = useRef<any>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     let pbiService: any = null;
@@ -56,9 +51,10 @@ const DashboardDetail = ({
             factories.routerFactory,
           );
 
-          // ✅ reset ก่อน embed ใหม่ทุกครั้ง
           pbiService.reset(reportRef.current);
-          pbiService.embed(reportRef.current, embedConfig);
+
+          const report = pbiService.embed(reportRef.current, embedConfig);
+          reportInstance.current = report;
         }
       } catch (err: any) {
         console.error(err);
@@ -68,7 +64,6 @@ const DashboardDetail = ({
 
     loadReport();
 
-    // ✅ cleanup ตอน unmount หรือ id เปลี่ยน
     return () => {
       if (pbiService && reportRef.current) {
         try {
@@ -77,6 +72,43 @@ const DashboardDetail = ({
       }
     };
   }, [id]);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement) {
+        setIsFullscreen(false);
+      }
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+    };
+  }, []);
+
+  const handleFullscreen = () => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    if (el.requestFullscreen) {
+      el.requestFullscreen();
+    } else if ((el as any).webkitRequestFullscreen) {
+      (el as any).webkitRequestFullscreen();
+    }
+    setIsFullscreen(true);
+  };
+
+  const handleExitFullscreen = () => {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if ((document as any).webkitExitFullscreen) {
+      (document as any).webkitExitFullscreen();
+    }
+    setIsFullscreen(false);
+  };
 
   if (errorMessage) {
     return (
@@ -91,8 +123,50 @@ const DashboardDetail = ({
   }
 
   return (
-    <div className="w-full" style={{ height: "100dvh" }}>
-      <div ref={reportRef} style={{ width: "100%", height: "100%" }} />
+    <div ref={containerRef} className="relative w-full h-[100dvh] bg-gray-100 overflow-hidden">
+
+      {/* แสดงเฉพาะ desktop (md ขึ้นไป) เท่านั้น */}
+      <div className="hidden xl:block absolute top-4 right-4 z-[9999]">
+        {isFullscreen ? (
+          <button
+            onClick={handleExitFullscreen}
+            className="
+              flex items-center gap-2
+              bg-red-600/90 hover:bg-red-600
+              text-white text-sm
+              px-4 py-2.5
+              rounded-xl shadow-2xl backdrop-blur
+              transition-all duration-200 active:scale-95
+            "
+          >
+            <Minimize className="w-5 h-5" />
+            <span>Exit</span>
+          </button>
+        ) : (
+          <button
+            onClick={handleFullscreen}
+            className="
+              flex items-center gap-2
+              bg-black/70 hover:bg-black
+              text-white text-sm
+              px-4 py-2.5
+              rounded-xl shadow-lg backdrop-blur
+              transition-all duration-200 active:scale-95
+            "
+          >
+            <Maximize className="w-5 h-5" />
+            <span>Fullscreen</span>
+          </button>
+        )}
+      </div>
+
+      {/* Report container */}
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="w-full h-full max-w-[1600px]">
+          <div ref={reportRef} className="w-full h-full" />
+        </div>
+      </div>
+
     </div>
   );
 };
