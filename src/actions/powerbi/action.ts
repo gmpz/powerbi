@@ -120,7 +120,6 @@ export async function getPowerbi(dashboardId: string) {
     }
 
     const embedTokenData = await embedTokenRes.json();
-    console.log("url : ", reportData.embedUrl);
     
     return {
       reportId,
