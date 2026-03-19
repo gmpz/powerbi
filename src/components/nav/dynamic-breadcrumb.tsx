@@ -22,6 +22,7 @@ export function DynamicBreadcrumb() {
     return res;
   }
   useEffect(() => {
+    setName("")
     if (segments.length > 1 && segments[0] == "dashboard") {
       const lastSegment = segments[segments.length - 1];
       dashBoardName(lastSegment).then(name => {

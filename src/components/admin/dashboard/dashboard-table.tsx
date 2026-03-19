@@ -148,7 +148,7 @@ export default function DashboardTable({
   }));
 
   return (
-    <Box sx={{ height: 400, width: "100%" }}>
+    <Box sx={{ width: "100%" }}>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2">
         <TextField
           label="Search"
