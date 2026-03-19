@@ -59,7 +59,7 @@ export default function DashboardSubRoleTable({
     {
       field: "no",
       headerName: "No",
-      width: 80,
+      width: 90,
       sortable: false,
       filterable: false,
       renderCell: (params) => (
@@ -73,6 +73,7 @@ export default function DashboardSubRoleTable({
       field: "mainRole",
       headerName: "Main Role",
       flex: 1,
+      minWidth: 150,
       renderCell: (params) => (
         <Badge variant="secondary">{params.value.name}</Badge>
       ),
@@ -82,6 +83,7 @@ export default function DashboardSubRoleTable({
       field: "code",
       headerName: "Sub Code",
       flex: 1,
+      minWidth: 150,
       renderCell: (params) => (
         <span>
           [
@@ -94,6 +96,7 @@ export default function DashboardSubRoleTable({
       field: "status",
       headerName: "Status",
       flex: 1,
+      minWidth: 150,
       renderCell: (params) => (
         <Badge variant="secondary">
           <span
@@ -141,9 +144,9 @@ export default function DashboardSubRoleTable({
 
   return (
     <Card className="shadow-md rounded-2xl">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Dashboard Sub Roles</CardTitle>
-        <Button variant="outline" onClick={() => setOpenAdd(true)}>
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <CardTitle className="text-base sm:text-lg">Dashboard Sub Roles</CardTitle>
+        <Button variant="outline"  className="w-full sm:w-auto" onClick={() => setOpenAdd(true)}>
           + Add Sub Role
         </Button>
       </CardHeader>
@@ -155,7 +158,12 @@ export default function DashboardSubRoleTable({
           pageSizeOptions={[5]}
           disableRowSelectionOnClick
           getRowId={(row) => row.id}
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            "& .MuiDataGrid-main": {
+              overflowX: "auto", // 👈 scroll อยู่แค่ตาราง
+            },
+          }}
         />
       </CardContent>
 

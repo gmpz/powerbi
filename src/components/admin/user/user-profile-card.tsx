@@ -111,6 +111,10 @@ export default function UserProfileCard({
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
+            <label className="text-sm">Provider ID</label>
+            <Input value={user.provider_id} disabled />
+          </div>
+          <div>
             <label className="text-sm">Username</label>
             <Input value={user.username} disabled />
           </div>

@@ -39,7 +39,7 @@ export default function DashboardMainRoleTable({
     {
       field: "no",
       headerName: "No",
-      width: 80,
+      width: 90,
       sortable: false,
       filterable: false,
       renderCell: (params) => (
@@ -49,12 +49,13 @@ export default function DashboardMainRoleTable({
       ),
     },
 
-    { field: "name", headerName: "Role Name", flex: 1 },
+    { field: "name", headerName: "Role Name", flex: 1, minWidth: 150 },
 
     {
       field: "status",
       headerName: "Status",
       flex: 1,
+      minWidth: 150,
       renderCell: (params) => (
         
         <Badge variant="secondary">
@@ -104,9 +105,9 @@ export default function DashboardMainRoleTable({
 
   return (
     <Card className="shadow-md rounded-2xl">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Dashboard Main Roles</CardTitle>
-        <Button variant="outline" onClick={() => setOpenAdd(true)}>
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <CardTitle className="text-base sm:text-lg">Dashboard Main Roles</CardTitle>
+        <Button variant="outline" className="w-full sm:w-auto" onClick={() => setOpenAdd(true)}>
           + Add Main Role
         </Button>
       </CardHeader>
@@ -117,7 +118,12 @@ export default function DashboardMainRoleTable({
           columns={columns}
           pageSizeOptions={[5]}
           disableRowSelectionOnClick
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            "& .MuiDataGrid-main": {
+              overflowX: "auto", // 👈 scroll อยู่แค่ตาราง
+            },
+          }}
         />
       </CardContent>
 

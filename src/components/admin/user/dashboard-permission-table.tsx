@@ -28,7 +28,7 @@ export default function DashboardPermissionTable({
     {
       field: "no",
       headerName: "No",
-      width: 50,
+      width: 90,
       sortable: false,
       filterable: false,
       renderCell: (params) => (
@@ -41,7 +41,8 @@ export default function DashboardPermissionTable({
     {
       field: "dashboard",
       headerName: "Dashboard",
-      width: 200,
+      flex: 1,
+      minWidth: 250,
       renderCell: (params) => (
         <span className="inline-flex items-center gap-2">
           <span
@@ -56,7 +57,8 @@ export default function DashboardPermissionTable({
     {
       field: "mainRole",
       headerName: "Main Role",
-      width: 150,
+      flex: 1,
+      minWidth: 150,
       renderCell: (params) => <span>{params.value?.name == null ? "-" : params.value.name}</span>
     },
 
@@ -64,6 +66,7 @@ export default function DashboardPermissionTable({
       field: "subRole",
       headerName: "Sub Role",
       flex: 1,
+      minWidth: 150,
       renderCell: (params) => (
         <span>{params.value?.code != null ? "[" + params.value?.code.toString().padStart(5, "0") + "]" : "-"}</span>
       ),
@@ -72,6 +75,7 @@ export default function DashboardPermissionTable({
       field: "status",
       headerName: "Status",
       flex: 1,
+      minWidth: 120,
       renderCell: (params) => (
         <Badge variant="secondary">
           <span
@@ -119,12 +123,19 @@ export default function DashboardPermissionTable({
 
   return (
     <Card className="shadow-md rounded-2xl">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Dashboard Access</CardTitle>
-        <Button variant={"outline"} onClick={() => setOpenAdd(true)}>
-          + Add Dashboard
-        </Button>
-      </CardHeader>
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+  <CardTitle className="text-base sm:text-lg">
+    Dashboard Access
+  </CardTitle>
+
+  <Button
+    variant="outline"
+    className="w-full sm:w-auto"
+    onClick={() => setOpenAdd(true)}
+  >
+    + Add Dashboard
+  </Button>
+</CardHeader>
 
       <CardContent style={{ height: 400 }}>
         <DataGrid
@@ -132,7 +143,12 @@ export default function DashboardPermissionTable({
           columns={columns}
           pageSizeOptions={[5]}
           disableRowSelectionOnClick
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            "& .MuiDataGrid-main": {
+              overflowX: "auto", // 👈 scroll อยู่แค่ตาราง
+            },
+          }}
         />
       </CardContent>
 

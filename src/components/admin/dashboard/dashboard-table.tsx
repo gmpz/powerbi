@@ -59,6 +59,7 @@ export default function DashboardTable({
       field: "name",
       headerName: "Dashboard Name",
       flex: 1,
+      minWidth: 250,
       renderCell: (params) => (
         <span className="inline-flex items-center gap-2">
           <span
@@ -69,7 +70,7 @@ export default function DashboardTable({
         </span>
       ),
     },
-    { field: "description", headerName: "Description", flex: 1 },
+    { field: "description", headerName: "Description", flex: 1,minWidth: 250, },
     {
       field: "userCount",
       headerName: "Used",
@@ -172,10 +173,16 @@ export default function DashboardTable({
       <DataGrid
         rows={rowsWithIndex}
         columns={columns}
-        pageSizeOptions={[5, 10]}
+        pageSizeOptions={[10, 20]}
+        sx={{
+            width: "100%",
+            "& .MuiDataGrid-main": {
+              overflowX: "auto", // 👈 scroll อยู่แค่ตาราง
+            },
+          }}
         initialState={{
           pagination: {
-            paginationModel: { pageSize: 5, page: 0 },
+            paginationModel: { pageSize: 10, page: 0 },
           },
         }}
       />

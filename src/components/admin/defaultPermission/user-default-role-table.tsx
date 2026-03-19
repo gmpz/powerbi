@@ -70,10 +70,10 @@ export default function UserDefaultRoleTable({
 
   const columns: GridColDef[] = [
     { field: "no", headerName: "No", width: 90 },
-    { field: "username", headerName: "Username", flex: 1 },
-    { field: "displayName", headerName: "Display Name", flex: 1 },
+    { field: "username", headerName: "Username",flex: 1, minWidth: 200},
+    { field: "displayName", headerName: "Display Name", flex: 1, minWidth: 250 },
 
-    { field: "role", headerName: "Role", width: 150 },
+    { field: "role", headerName: "Role", minWidth: 150 },
     {
       field: "mainRole",
       headerName: "mainRole",
@@ -208,14 +208,16 @@ export default function UserDefaultRoleTable({
       </div>
 
       {/* responsive container */}
-      <div style={{ width: "100%", overflowX: "auto" }}>
+      
         <DataGrid
           rows={rowsWithIndex}
           columns={columns}
           pageSizeOptions={[10, 20]}
-          autoHeight
           sx={{
-            minWidth: 700, // 👈 ถ้าหน้าจอเล็กจะ scroll
+            width: "100%",
+            "& .MuiDataGrid-main": {
+              overflowX: "auto", // 👈 scroll อยู่แค่ตาราง
+            },
           }}
           initialState={{
             pagination: {
@@ -231,7 +233,7 @@ export default function UserDefaultRoleTable({
         />
 
         <AddDefualtRoleDialog open={openAdd} setOpen={setOpenAdd} />
-      </div>
+      
 
       {syncing && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">

@@ -1,5 +1,5 @@
 import React from 'react'
-import DashboardMainRoleTable from './dashboard-main-role-table copy'
+import DashboardMainRoleTable from './dashboard-main-role-table'
 import { get } from 'http'
 import { getDashboardMainRole } from '@/actions/admin/dashboard/action';
 

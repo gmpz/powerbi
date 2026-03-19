@@ -32,33 +32,44 @@ export function DynamicBreadcrumb() {
   
 
   return (
-    <Breadcrumb>
-      <BreadcrumbList>
-        {segments.map((segment, index) => {
-          const href = "/" + segments.slice(0, index + 1).join("/")
-          const isLast = index === segments.length - 1
+  <Breadcrumb className="w-full overflow-hidden">
+    <BreadcrumbList
+      className="
+        flex-nowrap 
+        overflow-x-auto 
+        whitespace-nowrap 
+        scrollbar-hide
+        max-w-full
+      "
+    >
+      {segments.map((segment, index) => {
+        const href = "/" + segments.slice(0, index + 1).join("/")
+        const isLast = index === segments.length - 1
 
-          return (
-            <div key={href} className="flex items-center">
-              {index !== 0 && <BreadcrumbSeparator />}
+        return (
+          <div key={href} className="flex items-center shrink-0">
+            {index !== 0 && <BreadcrumbSeparator />}
 
-              <BreadcrumbItem>
-                {isLast ? (
-                  <BreadcrumbPage>
-                    {decodeURIComponent(name || segment)}
-                  </BreadcrumbPage>
-                ) : (
-                  <BreadcrumbLink asChild>
-                    <Link href={href}>
-                      {decodeURIComponent(segment)}
-                    </Link>
-                  </BreadcrumbLink>
-                )}
-              </BreadcrumbItem>
-            </div>
-          )
-        })}
-      </BreadcrumbList>
-    </Breadcrumb>
-  )
+            <BreadcrumbItem className="max-w-[120px] sm:max-w-none truncate">
+              {isLast ? (
+                <BreadcrumbPage className="truncate block">
+                  {decodeURIComponent(name || segment)}
+                </BreadcrumbPage>
+              ) : (
+                <BreadcrumbLink asChild>
+                  <Link
+                    href={href}
+                    className="truncate block hover:underline"
+                  >
+                    {decodeURIComponent(segment)}
+                  </Link>
+                </BreadcrumbLink>
+              )}
+            </BreadcrumbItem>
+          </div>
+        )
+      })}
+    </BreadcrumbList>
+  </Breadcrumb>
+)
 }

@@ -58,9 +58,13 @@ const canDelete = (target: User) => {
 
   const columns: GridColDef[] = [
   { field: "no", headerName: "No", width: 90 },
-  { field: "username", headerName: "Username", flex: 1 },
-  { field: "displayName", headerName: "Display Name", flex: 1 },
-  { field: "email", headerName: "Email", flex: 1 },
+  { field: "provider_id", headerName: "Provider ID", flex: 1, minWidth: 200,
+    renderCell: (params) => ( <span className="text-gray-500">{params.value}</span>)
+
+   },
+  { field: "username", headerName: "Username", flex: 1, minWidth: 200 },
+  { field: "displayName", headerName: "Display Name", flex: 1, minWidth: 250 },
+  
   { field: "role", headerName: "Role", width: 120 },
   {
     field: "actions",
@@ -105,7 +109,7 @@ const canDelete = (target: User) => {
   const filteredRows = users.filter((row) =>
     (row.username || "").toLowerCase().includes(search.toLowerCase()) ||
     (row.displayName || "").toLowerCase().includes(search.toLowerCase()) ||
-    (row.email || "").toLowerCase().includes(search.toLowerCase())
+    (row.provider_id || "").toLowerCase().includes(search.toLowerCase())
   );
   const rowsWithIndex = filteredRows.map((row, index) => ({
   ...row,
@@ -135,15 +139,17 @@ const canDelete = (target: User) => {
     </div>
 
     {/* responsive container */}
-    <div style={{ width: "100%", overflowX: "auto" }}>
       <DataGrid
         rows={rowsWithIndex}
         columns={columns}
         pageSizeOptions={[10, 20]}
-        autoHeight
         sx={{
-          minWidth: 700, // 👈 ถ้าหน้าจอเล็กจะ scroll
-        }}
+            width: "100%",
+            "& .MuiDataGrid-main": {
+              overflowX: "auto", // 👈 scroll อยู่แค่ตาราง
+            },
+          }}
+        
         initialState={{
           pagination: {
             paginationModel: { pageSize: 10, page: 0 },
@@ -151,7 +157,6 @@ const canDelete = (target: User) => {
         }}
       />
       
-    </div>
 
     <DelUserDialog open={openDel} setOpen={setOpenDel} user={selectedDelRow}  />
   </Box>
