@@ -116,7 +116,7 @@ export async function updateUser(
   const cookieStore = await cookies();
   const token = cookieStore.get("access_token")?.value;
 
-  await delay(3000);
+
 
   if (!token) {
     redirect("/login");

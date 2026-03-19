@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { getCurrentUser, getUser, getUserById } from "@/actions/admin/user/action";
 import UserTable from "@/components/admin/user/user-table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { LayoutDashboard } from "lucide-react";
+import { User2Icon } from "lucide-react";
 async function UserContent() {
   const users = await getUser();
   const userid = await getCurrentUser();
@@ -14,8 +14,8 @@ export default function Page() {
   return (
     <div>
       <div className="flex items-center gap-3 mb-8">
-          <div className="p-3 bg-indigo-100 rounded-2xl">
-            <LayoutDashboard className="w-6 h-6 text-indigo-600" />
+          <div className="p-3 bg-blue-100 rounded-2xl">
+            <User2Icon className="w-6 h-6 text-blue-600" />
           </div>
           <div>
             <h1 className="text-2xl font-semibold text-gray-800">

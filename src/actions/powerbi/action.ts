@@ -11,7 +11,7 @@ function delay(ms: number) {
 
 
 export async function getPowerbi(dashboardId: string) {
-  // await delay(3000);
+
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("access_token")?.value;

@@ -2,9 +2,10 @@ import { Suspense } from "react";
 import { getCurrentUser, getUser, getUserById } from "@/actions/admin/user/action";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { LayoutDashboard } from "lucide-react";
+
 import UserDefaultRoleTable from "@/components/admin/defaultPermission/user-default-role-table";
 import { getUserDefaultRole } from "@/actions/admin/user_permission/action";
+import { AccessibilityIcon, Edit2Icon, LockOpen, RollerCoasterIcon, UserRoundCheck } from "lucide-react";
 async function UserContent() {
   const users = await getUserDefaultRole();
   const userid = await getCurrentUser();
@@ -16,15 +17,15 @@ export default function Page() {
   return (
     <div>
       <div className="flex items-center gap-3 mb-8">
-          <div className="p-3 bg-indigo-100 rounded-2xl">
-            <LayoutDashboard className="w-6 h-6 text-indigo-600" />
+          <div className="p-3 bg-blue-100 rounded-2xl">
+            <UserRoundCheck className="w-6 h-6 text-blue-600" />
           </div>
           <div>
             <h1 className="text-2xl font-semibold text-gray-800">
-              User Management
+              User Default Dashboard Permission
             </h1>
             <p className="text-sm text-gray-500">
-              Manage and access users
+              Manage and setting users default permission
             </p>
           </div>
         </div>

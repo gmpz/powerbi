@@ -103,10 +103,7 @@ export async function getDashboardById(dashboardId: string) {
   };
 }
 
-export async function getDashboardName(dashboardId: string) {
-
-  console.log("dashboard id : ", dashboardId);
-  
+export async function getDashboardName(dashboardId: string) {  
 
   const dashboard = await prisma.dashboard.findUnique({
     where: { id: dashboardId },
