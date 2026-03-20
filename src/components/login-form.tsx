@@ -17,29 +17,30 @@ export function LoginForm({
 }: React.ComponentProps<"form">) {
   
   return (
+    
     <form className={cn("flex flex-col gap-6", className)} {...props}>
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">เข้าสู่ระบบ</h1>
-          <p className="text-muted-foreground text-sm text-balance">
-            Enter your email below to login to your account
+          <h1 className="text-lg sm:text-2xl font-bold">เข้าสู่ระบบ</h1>
+          <p className="text-muted-foreground text-xs sm:text-sm text-balance">
+            Enter your username to login
           </p>
         </div>
         <Field>
           <FieldLabel htmlFor="email">Username</FieldLabel>
-          <Input id="email" type="text" placeholder="myuser" required />
+          <Input id="email" type="text" placeholder="username" required />
         </Field>
         <Field>
           <div className="flex items-center">
             <FieldLabel htmlFor="password">Password</FieldLabel>
-            <a
+            {/* <a
               href="#"
               className="ml-auto text-sm underline-offset-4 hover:underline"
             >
               Forgot your password?
-            </a>
+            </a> */}
           </div>
-          <Input id="password" type="password" required />
+          <Input id="password" type="password" placeholder="password" required />
         </Field>
         <Field>
           <Button className="bg-primary" type="submit">Login</Button>
@@ -48,12 +49,12 @@ export function LoginForm({
         <Field >
           <BtnProvider />
             
-          <FieldDescription className="text-center">
+          {/* <FieldDescription className="text-center">
             Don&apos;t have an account?{" "}
             <a href="#" className="underline underline-offset-4">
               Sign up
             </a>
-          </FieldDescription>
+          </FieldDescription> */}
         </Field>
       </FieldGroup>
     </form>
