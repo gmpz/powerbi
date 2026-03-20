@@ -73,11 +73,12 @@ export default function UserDefaultRoleTable({
     { field: "username", headerName: "Username",flex: 1, minWidth: 200},
     { field: "displayName", headerName: "Display Name", flex: 1, minWidth: 250 },
 
-    { field: "role", headerName: "Role", minWidth: 150 },
+    { field: "role", headerName: "Role",flex: 1, minWidth: 120 },
     {
       field: "mainRole",
       headerName: "mainRole",
-      width: 150,
+      flex: 1,
+      minWidth: 120,
       renderCell: (params) => {
         return (
           <span>
@@ -91,7 +92,8 @@ export default function UserDefaultRoleTable({
     {
       field: "subRole",
       headerName: "subRole",
-      width: 150,
+      flex: 1,
+      minWidth: 120,
       renderCell: (params) => {
         return (
           <span>
@@ -105,7 +107,7 @@ export default function UserDefaultRoleTable({
     {
       field: "status",
       headerName: "Status",
-      width: 150,
+      minWidth: 120,
       renderCell: (params) => (
         <Badge variant="secondary">
           <span
@@ -119,7 +121,7 @@ export default function UserDefaultRoleTable({
     {
       field: "actions",
       headerName: "Actions",
-      width: 150,
+      minWidth: 150,
       renderCell: (params) => {
         return (
           <div className="flex items-center justify-center space-x-1 w-full h-full">
