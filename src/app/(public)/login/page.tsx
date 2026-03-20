@@ -10,28 +10,18 @@ export default function LoginPage() {
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="flex flex-col gap-4 p-10">
-        <div className="flex justify-center lg:justify-start px-2">
-          <a
-  href="/"
-  className="block lg:flex lg:items-center lg:gap-3 font-medium max-w-full text-center lg:text-left"
->
-  {/* Logo */}
-  <div className="mx-auto lg:mx-0 flex size-20 lg:size-12 shrink-0 items-center justify-center overflow-hidden rounded-md">
-    <img
-      src="/assets/logomoph.png"
-      alt="logo"
-      className="w-full h-full object-contain"
-    />
-  </div>
-
-  {/* Text */}
-  <span className="mt-2 lg:mt-0 text-xs sm:text-base md:text-base leading-tight line-clamp-2 lg:line-clamp-none">
-    Dashboard สำนักงานสาธารณสุขจังหวัดปทุมธานี
-  </span>
-</a>
-        </div>
+      
+        <div className="absolute inset-0 -z-10 lg:hidden">
+        <img
+          src="/assets/w-1.png"
+          alt="bg"
+          className="h-full w-full object-cover"
+        />
+        {/* overlay กันอ่านยาก */}
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
+      </div>
         <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-xs">
+          <div className="w-full max-w-sm">
             <LoginForm />
           </div>
         </div>

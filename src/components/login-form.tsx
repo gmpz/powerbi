@@ -17,13 +17,19 @@ export function LoginForm({
 }: React.ComponentProps<"form">) {
   
   return (
-    
+    <div
+        className={cn(
+          "rounded-2xl border border-white/20 bg-white backdrop-blur-md shadow-xl",
+          "p-6 sm:p-8",
+          className
+        )}
+      >
     <form className={cn("flex flex-col gap-6", className)} {...props}>
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-lg sm:text-2xl font-bold">เข้าสู่ระบบ</h1>
           <p className="text-muted-foreground text-xs sm:text-sm text-balance">
-            Enter your username to login
+            Dashboard สำนักงานสาธารณสุขจังหวัดปทุมธานี
           </p>
         </div>
         <Field>
@@ -58,5 +64,6 @@ export function LoginForm({
         </Field>
       </FieldGroup>
     </form>
+    </div>
   );
 }
