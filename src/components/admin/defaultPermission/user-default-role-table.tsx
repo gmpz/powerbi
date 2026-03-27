@@ -28,11 +28,13 @@ type UserDefaultRole = {
     mainRole: {
       id: string;
       name: string;
+      code: string
     } | null;
 
     subRole: {
       id: string;
       name: string;
+      code: number;
     } | null;
   }[];
 };
@@ -95,12 +97,10 @@ export default function UserDefaultRoleTable({
       flex: 1,
       minWidth: 120,
       renderCell: (params) => {
+        console.log(params.row.defaultRoles[0].subRole?.code);
+        
         return (
-          <span>
-            {params.row.defaultRoles[0].subRole?.name
-              ? params.row.defaultRoles[0].subRole?.name
-              : "-"}
-          </span>
+           <span>{params.row.defaultRoles[0].subRole?.code != null ? "[" + params.row.defaultRoles[0].subRole?.code.toString().padStart(5, "0") + "]" : "-"}</span>
         );
       },
     },

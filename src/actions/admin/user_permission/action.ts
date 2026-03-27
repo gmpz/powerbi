@@ -46,12 +46,14 @@ export async function getUserDefaultRole() {
           select: {
             id: true,
             name: true,
+            code: true,
           }
         },
         subRole: {
           select: {
             id: true,
             name: true,
+            code: true
           }
         }
       }
