@@ -39,7 +39,7 @@ export default function DashboardMainRoleTable({
     {
       field: "no",
       headerName: "No",
-      width: 90,
+      width: 60,
       sortable: false,
       filterable: false,
       renderCell: (params) => (
@@ -55,7 +55,7 @@ export default function DashboardMainRoleTable({
       field: "status",
       headerName: "Status",
       flex: 1,
-      minWidth: 150,
+      minWidth: 100,
       renderCell: (params) => (
         
         <Badge variant="secondary">

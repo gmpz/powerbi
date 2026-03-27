@@ -59,7 +59,7 @@ export default function DashboardSubRoleTable({
     {
       field: "no",
       headerName: "No",
-      width: 90,
+      width: 60,
       sortable: false,
       filterable: false,
       renderCell: (params) => (
@@ -73,7 +73,7 @@ export default function DashboardSubRoleTable({
       field: "mainRole",
       headerName: "Main Role",
       flex: 1,
-      minWidth: 150,
+      minWidth: 140,
       renderCell: (params) => (
         <Badge variant="secondary">{params.value.name}</Badge>
       ),
@@ -83,7 +83,7 @@ export default function DashboardSubRoleTable({
       field: "code",
       headerName: "Sub Code",
       flex: 1,
-      minWidth: 150,
+      minWidth: 100,
       renderCell: (params) => (
         <span>
           [
@@ -96,7 +96,7 @@ export default function DashboardSubRoleTable({
       field: "status",
       headerName: "Status",
       flex: 1,
-      minWidth: 150,
+      minWidth: 100,
       renderCell: (params) => (
         <Badge variant="secondary">
           <span

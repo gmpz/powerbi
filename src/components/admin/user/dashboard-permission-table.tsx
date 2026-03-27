@@ -28,7 +28,7 @@ export default function DashboardPermissionTable({
     {
       field: "no",
       headerName: "No",
-      width: 90,
+      width: 60,
       sortable: false,
       filterable: false,
       renderCell: (params) => (
@@ -42,7 +42,7 @@ export default function DashboardPermissionTable({
       field: "dashboard",
       headerName: "Dashboard",
       flex: 1,
-      minWidth: 250,
+      minWidth: 200,
       renderCell: (params) => (
         <span className="inline-flex items-center gap-2">
           <span
@@ -58,7 +58,7 @@ export default function DashboardPermissionTable({
       field: "mainRole",
       headerName: "Main Role",
       flex: 1,
-      minWidth: 150,
+      minWidth: 120,
       renderCell: (params) => <span>{params.value?.name == null ? "-" : params.value.name}</span>
     },
 
@@ -66,7 +66,7 @@ export default function DashboardPermissionTable({
       field: "subRole",
       headerName: "Sub Role",
       flex: 1,
-      minWidth: 150,
+      minWidth: 100,
       renderCell: (params) => (
         <span>{params.value?.code != null ? "[" + params.value?.code.toString().padStart(5, "0") + "]" : "-"}</span>
       ),
@@ -75,7 +75,7 @@ export default function DashboardPermissionTable({
       field: "status",
       headerName: "Status",
       flex: 1,
-      minWidth: 120,
+      minWidth: 100,
       renderCell: (params) => (
         <Badge variant="secondary">
           <span
