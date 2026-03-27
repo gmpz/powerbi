@@ -355,7 +355,8 @@ export async function insertDashboard(data: {
 
   const isSyncDefaultDashboard = await prisma.systemSetting.findFirst({
     where: {
-      code: "SYNC_DEFAULT_DASHBOARD"
+      code: "SYNC_DEFAULT_DASHBOARD",
+      status: true
     },
     select : {
       status: true
