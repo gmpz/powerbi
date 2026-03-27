@@ -2,10 +2,25 @@
 
 import { useRouter } from "next/navigation";
 import { ShieldAlert } from "lucide-react";
-import { logout } from "@/actions/auth/action";
+import { checkAndRefreshRole, logout } from "@/actions/auth/action";
+import { useEffect } from "react";
 
 export default function UnauthorizePage() {
+  const router = useRouter();
 
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const data = await checkAndRefreshRole();
+      console.log(data);
+      
+
+      if (data?.role !== "ANONYMOUS") {
+        router.replace("/dashboard");
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogout = async () => {
     await logout();
@@ -38,7 +53,6 @@ export default function UnauthorizePage() {
 
         {/* Actions */}
         <div className="pt-4 space-y-3">
-          
           <button
             onClick={handleLogout}
             className="w-full bg-gray-900 hover:bg-black text-white py-2 rounded-lg transition"
