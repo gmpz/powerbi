@@ -27,41 +27,51 @@ const DashboardList = async () => {
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-6 pt-0">
-      {/* Dashboard List */}
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {/* Card 1 */}
-        {dashboards.map((item) => (
-          <Link key={item.id} href={`/dashboard/${item.id}`}>
-            <div className="group rounded-2xl border bg-card p-6 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer hover:-translate-y-1">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">{item.name}</h3>
+  {/* Dashboard List */}
+  <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3 items-stretch">
+    {dashboards.map((item) => (
+      <Link
+        key={item.id}
+        href={`/dashboard/${item.id}`}
+        className="h-full"
+      >
+        <div className="group h-full flex flex-col rounded-2xl border bg-card p-6 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer hover:-translate-y-1">
+          
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold line-clamp-2 leading-snug">
+              {item.name}
+            </h3>
 
-                <div
-                  className="h-10 w-10 rounded-xl flex items-center justify-center font-bold"
-                  style={{
-                    color: item.color || "#000",
-                    backgroundColor: `${item.color || "#000"}20`,
-                  }}
-                >
-                  {item.name.charAt(0).toUpperCase()}
-                </div>
-              </div>
-
-              <p className="text-sm text-muted-foreground mt-3">
-                {item.description || "No description provided."}
-              </p>
-
-              <div
-                className="mt-4 text-sm font-medium group-hover:underline"
-                style={{ color: item.color || "#000" }}
-              >
-                View Dashboard →
-              </div>
+            <div
+              className="h-10 w-10 rounded-xl flex items-center justify-center font-bold shrink-0"
+              style={{
+                color: item.color || "#000",
+                backgroundColor: `${item.color || "#000"}20`,
+              }}
+            >
+              {item.name.charAt(6).toUpperCase()}
             </div>
-          </Link>
-        ))}
-      </div>
-    </div>
+          </div>
+
+          {/* Description */}
+          <p className="text-sm text-muted-foreground mt-3 line-clamp-3">
+            {item.description || "No description provided."}
+          </p>
+
+          {/* Footer */}
+          <div
+            className="mt-auto pt-4 text-sm font-medium group-hover:underline"
+            style={{ color: item.color || "#000" }}
+          >
+            View Dashboard →
+          </div>
+
+        </div>
+      </Link>
+    ))}
+  </div>
+</div>
   );
 };
 

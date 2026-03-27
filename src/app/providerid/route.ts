@@ -130,7 +130,7 @@ export async function GET(req: NextRequest) {
       role: user.role,
     })
       .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime("7d")
+      .setExpirationTime("1d")
       .sign(secret);
 
     const host =
