@@ -51,7 +51,15 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
 
   } catch (err) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    // return NextResponse.redirect(new URL("/login", req.url));
+    if (pathname.startsWith("/login")) {
+      return NextResponse.next();
+    }
+
+    const res = NextResponse.redirect(new URL("/login", req.url));
+    res.cookies.delete("access_token");
+
+    return res;
   }
 }
 

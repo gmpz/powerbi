@@ -11,8 +11,6 @@ export default function UnauthorizePage() {
   useEffect(() => {
     const interval = setInterval(async () => {
       const data = await checkAndRefreshRole();
-      console.log(data);
-      
 
       if (data?.role !== "ANONYMOUS") {
         router.replace("/dashboard");

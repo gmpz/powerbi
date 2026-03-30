@@ -3,13 +3,11 @@
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Box, TextField } from "@mui/material";
-import { red } from "@mui/material/colors";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { CloudSyncIcon, EditIcon, FolderSync, Trash2Icon } from "lucide-react";
+import { CloudSyncIcon, EditIcon, Trash2Icon } from "lucide-react";
 import { DelDefualtRoleDialog } from "./del-default-role-dialog";
 import AddDefualtRoleDialog from "./add-defualt-role-dialog";
-import { Param } from "@prisma/client/runtime/library";
 import EditDefaultRoleDialog from "./edit-default-role-dialog";
 import { syncUserDashboard } from "@/actions/admin/user_permission/action";
 import { Badge } from "@/components/ui/badge";
@@ -23,7 +21,6 @@ type UserDefaultRole = {
   createdAt: Date;
   updatedAt: Date;
   provider_id: string;
-
   defaultRoles: {
     mainRole: {
       id: string;
@@ -96,9 +93,7 @@ export default function UserDefaultRoleTable({
       headerName: "subRole",
       flex: 1,
       minWidth: 120,
-      renderCell: (params) => {
-        console.log(params.row.defaultRoles[0].subRole?.code);
-        
+      renderCell: (params) => {        
         return (
            <span>{params.row.defaultRoles[0].subRole?.code != null ? "[" + params.row.defaultRoles[0].subRole?.code.toString().padStart(5, "0") + "]" : "-"}</span>
         );
