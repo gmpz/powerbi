@@ -39,15 +39,18 @@ export function LoginForm({
         <Field>
           <div className="flex items-center">
             <FieldLabel htmlFor="password">Password</FieldLabel>
-            {/* <a
-              href="#"
-              className="ml-auto text-sm underline-offset-4 hover:underline"
-            >
-              Forgot your password?
-            </a> */}
+            
           </div>
           <Input id="password" type="password" placeholder="password" required />
+          
         </Field>
+        <a
+              href="/assets/manual/file-manual.pdf"
+              target="_blank"
+              className="ml-auto text-sm underline-offset-4 text-gray-500 hover:text-black hover:underline"
+            >
+              คู่มือการใช้งาน
+            </a>
         <Field>
           <Button className="bg-primary" type="submit">Login</Button>
         </Field>

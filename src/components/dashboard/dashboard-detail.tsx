@@ -1,7 +1,7 @@
 "use client";
 
 import { getPowerbi } from "@/actions/powerbi/action";
-import { AlertCircle, Maximize, Minimize } from "lucide-react";
+import { AlertCircle, BookAIcon, Maximize, Minimize } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 
 interface DashboardProps {
@@ -143,6 +143,24 @@ const DashboardDetail = ({ id }: DashboardProps) => {
             <span>Exit</span>
           </button>
         ) : (
+          <div className="flex items-center gap-2">
+            { id == "b6ad388f-88af-4808-bf20-46796492944c" && (
+              <button
+            onClick={() => window.open("https://www.canva.com/design/DAHDn-CqcDk/m4ZOYQ8IuJfLoU0mLWwjvQ/view?utm_content=DAHDn-CqcDk&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hecd0743c39", "_blank")}
+            className="
+              flex items-center gap-2
+              bg-black/70 hover:bg-black
+              text-white text-sm
+              px-4 py-2.5
+              rounded-xl shadow-lg backdrop-blur
+              transition-all duration-200 active:scale-95
+            "
+          >
+            <BookAIcon className="w-5 h-5" />
+            <span>คู่มือ</span>
+          </button>
+            )}
+          
           <button
             onClick={handleFullscreen}
             className="
@@ -157,6 +175,8 @@ const DashboardDetail = ({ id }: DashboardProps) => {
             <Maximize className="w-5 h-5" />
             <span>Fullscreen</span>
           </button>
+          </div>
+          
         )}
       </div>
 

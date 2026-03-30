@@ -5,7 +5,7 @@ import { LayoutDashboard } from "lucide-react";
 export default function DashboardPage() {
   return (
     <div >
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl 2xl:max-w-full mx-auto">
         
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
@@ -34,7 +34,7 @@ export default function DashboardPage() {
 
 function DashboardSkeleton() {
   return (
-    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 ">
       {[...Array(6)].map((_, i) => (
         <div
           key={i}

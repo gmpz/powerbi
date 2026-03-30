@@ -28,7 +28,7 @@ const DashboardList = async () => {
   return (
     <div className="flex flex-1 flex-col gap-6 p-6 pt-0">
   {/* Dashboard List */}
-  <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3 items-stretch">
+  <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 items-stretch">
     {dashboards.map((item) => (
       <Link
         key={item.id}
