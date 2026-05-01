@@ -19,6 +19,11 @@ enum Status {
   ACTIVE
   INACTIVE
 }
+enum RegisterStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
 
 enum RoleType {
   SYSTEM // default ที่มากับระบบ
@@ -40,6 +45,9 @@ model User {
 
   dashboards   UserDashboard[]
   defaultRoles DefaultRole[]
+
+  registers Register[]
+
 }
 
 model Dashboard {
@@ -148,4 +156,23 @@ model SystemSetting {
   status Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+
+model Register {
+  id        String   @id @default(uuid())
+  userId    String
+  role      UserRole @default(VIEWER)
+  orgCode   String?
+  orgDesc   String?
+  status    RegisterStatus @default(PENDING)
+  approveBy String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([orgCode])
 }
