@@ -119,7 +119,7 @@ export default function UnauthorizePage() {
     const [code, name] = value.split("|");
 
     setOrgCode(Number(code));
-    setOrgDesc(`[${code}] ${name}`);
+    setOrgDesc(`[${code.toString().padStart(5, "0")}] ${name}`);
   };
 
   return (
