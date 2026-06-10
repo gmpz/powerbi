@@ -72,8 +72,8 @@ export async function getUserDashboards() {
         name: dashboard.name,
         description: dashboard.description,
         color: dashboard.color,
-        mainRole: null,
-        subRole: null,
+        mainRole: undefined,
+        subRole: undefined,
         createdAt: dashboard.createdAt,
       });
     }
