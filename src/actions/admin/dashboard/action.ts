@@ -364,27 +364,27 @@ export async function insertDashboard(data: {
   });
 
   if (isSyncDefaultDashboard) {
-    const defaultRole = await prisma.defaultRole.findMany({
-      where : {
-        status : "ACTIVE"
-      }
-    });
+    if (data.rbac === "ACTIVE") {
+      const defaultRole = await prisma.defaultRole.findMany({
+        where : {
+          status : "ACTIVE"
+        }
+      });
 
-    await Promise.all(
-      defaultRole.map((item) =>
-        prisma.userDashboard.create({
-          data: {
+      if (defaultRole.length > 0) {
+        await prisma.userDashboard.createMany({
+          data: defaultRole.map((item) => ({
             userId: item.userId,
             dashboardId: newDashboard.id,
             mainRoleId: item.mainRoleId,
             subRoleId: item.subRoleId || null,
             status: "ACTIVE",
-            createdBy: user.id
-          }
-        })
-      )
-    )
-
+            createdBy: user.id,
+          })),
+          skipDuplicates: true,
+        });
+      }
+    }
   }
 
   return {

@@ -5,11 +5,6 @@ import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
-function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-
 export async function getPowerbi(dashboardId: string) {
 
   try {
@@ -22,33 +17,47 @@ export async function getPowerbi(dashboardId: string) {
 
 
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-      const { payload } = await jwtVerify(token, secret);
-    
-      const userId = payload.userId as string;
+    const { payload } = await jwtVerify(token, secret);
+    const userId = payload.userId as string;
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      notFound();
+    }
+
+    const dashboard = await prisma.dashboard.findFirst({
+      where: {
+        id: dashboardId,
+        status: "ACTIVE",
+      },
+    });
+
+    if (!dashboard) {
+      notFound();
+    }
 
     const access = await prisma.userDashboard.findFirst({
       where: {
         userId,
         dashboardId,
         status: "ACTIVE",
-        dashboard: { status: "ACTIVE" },
       },
       include: {
-        dashboard: true,
         mainRole: true,
-        subRole: true,
-        user: true,
       },
     });
 
-    if (!access) {
+    if (dashboard.accessCtrl === "ACTIVE" && !access) {
       notFound();
     }
-    
-    
-    // TODO: query dashboard จาก db ด้วย dashboardId
-    const workspaceId = access.dashboard.workspaceId;
-    const reportId = access.dashboard.reportId;
+
+    const workspaceId = dashboard.workspaceId;
+    const reportId = dashboard.reportId;
 
     // 1️⃣ ขอ Azure AD token
     const tokenRes = await fetch(
@@ -65,11 +74,15 @@ export async function getPowerbi(dashboardId: string) {
       }
     );
 
+    console.log("token:", tokenRes);
+
     if (!tokenRes.ok) {
       throw new Error("Failed to get Azure token");
     }
 
     const tokenData = await tokenRes.json();
+    
+    
     const accessToken = tokenData.access_token;
 
     // 2️⃣ ดึง report info
@@ -89,13 +102,13 @@ export async function getPowerbi(dashboardId: string) {
 
 
     const accessCtrl = {
-      username: access.user.username, // ใส่อะไรก็ได้ แต่ห้ามว่าง  user+subRole  
-      roles: [access.mainRole?.name], // ต้องตรงกับชื่อ role ที่สร้างใน PowerBI mainRole
+      username: user.username,
+      roles: access?.mainRole?.name ? [access.mainRole.name] : [],
       datasets: [datasetId],
-    }
+    };
     const body = {
       accessLevel: "View",
-      ...(access.dashboard.accessCtrl === "ACTIVE" && {
+      ...(dashboard.accessCtrl === "ACTIVE" && {
         identities: [accessCtrl],
       }),
     };

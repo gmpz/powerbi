@@ -4,12 +4,6 @@ import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
 import { notFound, redirect } from "next/navigation";
-import { UserRole } from "@prisma/client";
-
-// 🔥 helper delay
-function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 export async function getUserPermissionDashboard(userId: string) {
   const cookieStore = await cookies();
@@ -52,6 +46,7 @@ export async function getAvailableDashboards(userId: string) {
   const dashboards = await prisma.dashboard.findMany({
     where: {
       status: "ACTIVE",
+      accessCtrl: "ACTIVE",
       users: {
         none: {
           userId: userId,
@@ -486,8 +481,6 @@ export async function DelDashboards(id : string) {
     message: "deleted successfully",
   };
 }
-
-
 
 
 
