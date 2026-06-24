@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { SignJWT } from "jose";
 
+const authDebug = process.env.AUTH_DEBUG === "true";
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -140,7 +142,18 @@ export async function GET(req: NextRequest) {
       req.headers.get("x-forwarded-proto") ?? "http";
 
     const origin = `${proto}://${host}`;
-    
+
+    if (authDebug) {
+      console.log("[auth][providerid] issuing login cookie", {
+        host,
+        proto,
+        origin,
+        nextPublicAppUrl: process.env.NEXT_PUBLIC_APP_URL,
+        providerId: profile.provider_id,
+        role: user.role,
+        secureCookie: process.env.NODE_ENV === "production",
+      });
+    }
 
     const response = NextResponse.redirect(`${origin}/dashboard`);
 
