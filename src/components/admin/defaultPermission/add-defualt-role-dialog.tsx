@@ -171,7 +171,7 @@ export default function AddDefualtRoleDialog({
   /* ================================================= */
 
   return (
-    <Dialog open={open} onOpenChange={setOpen} modal={false}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="max-w-xl w-full rounded-2xl overflow-visible">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">

@@ -22,14 +22,23 @@ export function DynamicBreadcrumb() {
     return res;
   }
   useEffect(() => {
-    setName("")
+    let active = true;
+
     if (segments.length > 1 && segments[0] == "dashboard") {
       const lastSegment = segments[segments.length - 1];
       dashBoardName(lastSegment).then(name => {
-        setName(name || lastSegment);
+        if (active) {
+          setName(name || lastSegment);
+        }
       });
+    } else {
+      setName("");
     }
-  }, [pathname])
+
+    return () => {
+      active = false;
+    };
+  }, [pathname, segments])
   
 
   return (

@@ -106,6 +106,7 @@ export async function getPowerbi(dashboardId: string) {
       roles: access?.mainRole?.name ? [access.mainRole.name] : [],
       datasets: [datasetId],
     };
+    
     const body = {
       accessLevel: "View",
       ...(dashboard.accessCtrl === "ACTIVE" && {
